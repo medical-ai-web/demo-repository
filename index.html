@@ -190,7 +190,6 @@
     <script>
         let currentActiveItemId = null;
 
-        // 🌟 检查 URL 中是否有分享参数，如果有则直接渲染分享专属对话页面
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const shareParam = params.get('share');
@@ -274,7 +273,6 @@
             }
         }
 
-        // 🌟 核心分享逻辑：提取当前对话内容生成专属链接并复制以便转发微信
         function handleMenuAction(actionName) {
             const menu = document.getElementById('globalMenu');
             menu.classList.remove('show');
@@ -339,7 +337,8 @@
             recentContainer.prepend(newItem);
         }
 
-        function loadHistoryItem(title, event) {
+        // 🌟 已打通 Dify 后端：点击历史记录时，将标题真正发送给 Dify 获取 AI 回复
+        async function loadHistoryItem(title, event) {
             if (event && event.target.closest('.item-actions')) return;
 
             document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
@@ -349,10 +348,26 @@
             document.getElementById('header-title').innerText = title + " - 咨询中";
 
             const chatHistory = document.getElementById('chat-history');
-            chatHistory.innerHTML = `
-                <div class="msg user-msg">${title}</div>
-                <div class="msg ai-msg">正在调阅关于“${title}”的历史存档建议：请注意保持观察，必要时请遵医嘱线下就诊。</div>
-            `;
+            chatHistory.innerHTML = `<div class="msg user-msg">${title}</div>`;
+
+            const loadingId = 'loading-' + Date.now();
+            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在连接 Dify 后端获取专家建议...</div>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: title }) 
+                });
+
+                const data = await response.json();
+                let cleanAnswer = data.answer ? data.answer.replace(/[\*\_#]/g, '') : "❌ 抱歉，服务器响应异常。";
+                document.getElementById(loadingId).innerText = cleanAnswer;
+            } catch (error) {
+                document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
         }
 
         async function sendMessage() {
