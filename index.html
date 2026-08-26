@@ -118,7 +118,6 @@
             </div>
         </div>
         
-        <!-- 🌟 点击可真正重置并开启新对话 -->
         <div class="new-chat-btn" onclick="startNewChat()">
             <span>+</span> 开启新对话
         </div>
@@ -126,38 +125,38 @@
         <div class="history-section">
             <div class="section-title">已置顶</div>
             <div id="pinned-container">
-                <div class="history-item" id="item-1" onclick="loadHistoryDemo('半夜孩子发高烧应对方案', event)">
+                <div class="history-item" id="item-1" onclick="loadHistoryItem('半夜孩子发高烧应对方案', event)">
                     <span class="history-text">半夜孩子发高烧应对方案</span>
                     <div class="item-actions">
-                        <button class="action-btn" title="取消置顶" onclick="togglePin('item-1', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
+                        <button class="action-btn pin-btn" title="取消置顶" onclick="togglePin('item-1', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
                         <button class="action-btn" title="更多" onclick="toggleMenu(event, 'menu1')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
                     </div>
                     <div class="action-menu" id="menu1">
-                        <div class="menu-item" onclick="handleAction('分享', 'item-1', event)"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
-                        <div class="menu-item" onclick="handleAction('重命名', 'item-1', event)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
+                        <div class="menu-item" onclick="handleMenuAction('分享', 'item-1', event)"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
+                        <div class="menu-item" onclick="handleMenuAction('重命名', 'item-1', event)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
                         <div class="menu-divider"></div>
                         <div class="menu-item" onclick="togglePin('item-1', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>取消置顶</div>
-                        <div class="menu-item" onclick="handleAction('归档', 'item-1', event)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>归档</div>
-                        <div class="menu-item danger" onclick="handleAction('删除', 'item-1', event)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>删除</div>
+                        <div class="menu-item" onclick="handleMenuAction('归档', 'item-1', event)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>归档</div>
+                        <div class="menu-item danger" onclick="handleMenuAction('删除', 'item-1', event)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>删除</div>
                     </div>
                 </div>
             </div>
 
             <div class="section-title">最近</div>
             <div id="recent-container">
-                <div class="history-item" id="item-2" onclick="loadHistoryDemo('高血压日常注意事项', event)">
+                <div class="history-item active" id="item-2" onclick="loadHistoryItem('高血压日常注意事项', event)">
                     <span class="history-text">高血压日常注意事项</span>
                     <div class="item-actions">
-                        <button class="action-btn" title="置顶" onclick="togglePin('item-2', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
+                        <button class="action-btn pin-btn" title="置顶" onclick="togglePin('item-2', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
                         <button class="action-btn" title="更多" onclick="toggleMenu(event, 'menu2')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
                     </div>
                     <div class="action-menu" id="menu2">
-                        <div class="menu-item" onclick="handleAction('分享', 'item-2', event)"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
-                        <div class="menu-item" onclick="handleAction('重命名', 'item-2', event)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
+                        <div class="menu-item" onclick="handleMenuAction('分享', 'item-2', event)"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
+                        <div class="menu-item" onclick="handleMenuAction('重命名', 'item-2', event)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
                         <div class="menu-divider"></div>
                         <div class="menu-item" onclick="togglePin('item-2', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>置顶聊天</div>
-                        <div class="menu-item" onclick="handleAction('归档', 'item-2', event)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>归档</div>
-                        <div class="menu-item danger" onclick="handleAction('删除', 'item-2', event)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>删除</div>
+                        <div class="menu-item" onclick="handleMenuAction('归档', 'item-2', event)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>归档</div>
+                        <div class="menu-item danger" onclick="handleMenuAction('删除', 'item-2', event)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>删除</div>
                     </div>
                 </div>
             </div>
@@ -175,7 +174,7 @@
 
     <div class="main-content">
         <div class="chat-header">
-            <span>医疗底座 A 智能专家咨询中</span>
+            <span id="header-title">医疗底座 A 智能专家咨询中</span>
             <span style="font-size: 11px; opacity: 0.8;">Secure Backend Active</span>
         </div>
         
@@ -223,7 +222,7 @@
             document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('show'));
         });
 
-        // 🌟 动态置顶/取消置顶功能（真正实现上下列表移动）
+        // 🌟 核心置顶逻辑：实现上下板块切换并实时更新按钮提示与菜单文字
         function togglePin(itemId, event) {
             event.stopPropagation();
             document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('show'));
@@ -231,16 +230,20 @@
             const item = document.getElementById(itemId);
             const pinnedContainer = document.getElementById('pinned-container');
             const recentContainer = document.getElementById('recent-container');
-
-            // 判断当前在哪个容器里，然后移到另一个容器
+            const pinBtn = item.querySelector('.pin-btn');
+            
+            // 找到对应的菜单项（假设菜单里包含置顶/取消置顶的文本或通过判断容器）
             if (item.parentElement === pinnedContainer) {
                 recentContainer.appendChild(item);
+                if (pinBtn) pinBtn.title = "置顶";
             } else {
                 pinnedContainer.appendChild(item);
+                if (pinBtn) pinBtn.title = "取消置顶";
             }
         }
 
-        function handleAction(actionName, itemId, event) {
+        // 🌟 菜单各项操作响应逻辑
+        function handleMenuAction(actionName, itemId, event) {
             event.stopPropagation();
             document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('show'));
             
@@ -257,20 +260,62 @@
                 if (newName) {
                     textElement.innerText = newName;
                 }
+            } else if (actionName === '分享') {
+                navigator.clipboard.writeText(window.location.href);
+            } else if (actionName === '归档') {
+                itemElement.style.opacity = '0.4';
             } else if (actionName === '置顶聊天' || actionName === '取消置顶') {
                 togglePin(itemId, event);
             }
         }
 
-        // 🌟 开启新对话功能（点击清空屏幕并重置初始欢迎语）
+        // 🌟 开启新对话：不仅清空右侧屏幕，还会在左侧最近列表中动态新增一个新对话
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
+            
+            document.getElementById('header-title').innerText = "新对话 - 医疗智能辅助系统";
+
+            // 动态在左侧“最近”列表中新增一项
+            const recentContainer = document.getElementById('recent-container');
+            const newId = 'item-' + Date.now();
+            const newMenuId = 'menu-' + Date.now();
+            
+            // 取消其他项的 active 状态
+            document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+
+            const newItem = document.createElement('div');
+            newItem.className = 'history-item active';
+            newItem.id = newId;
+            newItem.onclick = function(e) { loadHistoryItem('新医疗咨询会话', e); };
+            newItem.innerHTML = `
+                <span class="history-text">新医疗咨询会话</span>
+                <div class="item-actions">
+                    <button class="action-btn pin-btn" title="置顶" onclick="togglePin('${newId}', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
+                    <button class="action-btn" title="更多" onclick="toggleMenu(event, '${newMenuId}')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                </div>
+                <div class="action-menu" id="${newMenuId}">
+                    <div class="menu-item" onclick="handleMenuAction('分享', '${newId}', event)"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
+                    <div class="menu-item" onclick="handleMenuAction('重命名', '${newId}', event)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item" onclick="togglePin('${newId}', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>置顶聊天</div>
+                    <div class="menu-item" onclick="handleMenuAction('归档', '${newId}', event)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>归档</div>
+                    <div class="menu-item danger" onclick="handleMenuAction('删除', '${newId}', event)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>删除</div>
+                </div>
+            `;
+            recentContainer.prepend(newItem);
         }
 
-        function loadHistoryDemo(title, event) {
+        function loadHistoryItem(title, event) {
             if (event && (event.target.closest('.item-actions') || event.target.closest('.action-menu'))) return;
+
+            // 切换高亮选中状态
+            document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+            const clickedItem = event.currentTarget;
+            if (clickedItem) clickedItem.classList.add('active');
+
+            document.getElementById('header-title').innerText = title + " - 咨询中";
 
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `
