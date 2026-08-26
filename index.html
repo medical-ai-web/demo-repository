@@ -16,6 +16,9 @@
             --input-bg: #2f2f2f;
             --input-border: #3f3f3f;
             --user-msg-bg: #2f2f2f;
+            --menu-bg: #2b2b2b;
+            --menu-hover: #383838;
+            --danger-color: #f87171;
         }
         :root[data-theme="light"] {
             --bg-sidebar: #f9f9f9;
@@ -27,6 +30,9 @@
             --input-bg: #f4f4f4;
             --input-border: #dcdcdc;
             --user-msg-bg: #f0f0f0;
+            --menu-bg: #ffffff;
+            --menu-hover: #f0f0f0;
+            --danger-color: #dc2626;
         }
 
         * { box-sizing: border-box; }
@@ -36,12 +42,11 @@
         .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 14px; transition: background 0.3s, border 0.3s; }
         
         .sidebar-top { display: flex; align-items: center; gap: 10px; padding: 8px 6px; margin-bottom: 8px; }
-        .brand-icon-img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .brand-icon-img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.18); display: block; }
         .brand-info { display: flex; flex-direction: column; }
         .brand-title { font-size: 14px; font-weight: 600; color: var(--text-main); letter-spacing: 0.2px; }
         .brand-subtitle { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
         
-        /* 绿色专业脉冲呼吸灯 */
         .status-dot { width: 7px; height: 7px; background-color: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
         @keyframes pulse {
             0% { transform: scale(0.95); opacity: 0.8; }
@@ -54,10 +59,27 @@
 
         .history-section { flex: 1; margin-top: 20px; overflow-y: auto; }
         .history-title { font-size: 12px; color: var(--text-muted); padding: 4px 10px; margin-bottom: 4px; }
-        .history-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s; }
+        
+        /* 会话条目样式优化（支持右侧三点菜单悬浮） */
+        .history-item { position: relative; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
         .history-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
         .history-item.active { background-color: var(--bg-hover); color: var(--text-main); }
+        .history-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+        
+        .menu-trigger { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; opacity: 0; transition: 0.2s; }
+        .history-item:hover .menu-trigger { opacity: 1; }
+        .menu-trigger:hover { background: var(--border-color); color: var(--text-main); }
 
+        /* 🌟 高定悬浮菜单弹窗（完全还原图中样式） */
+        .action-menu { position: absolute; left: 180px; top: 35px; width: 160px; background-color: var(--menu-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; display: none; padding: 6px; }
+        .action-menu.show { display: block; }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13px; color: var(--text-main); border-radius: 6px; cursor: pointer; transition: 0.15s; }
+        .menu-item:hover { background-color: var(--menu-hover); }
+        .menu-divider { height: 1px; background-color: var(--border-color); margin: 4px 0; }
+        .menu-item.danger { color: var(--danger-color); }
+        .menu-item.danger:hover { background-color: rgba(248, 113, 113, 0.1); }
+
+        /* 主题选择 */
         .theme-selector { padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
         .theme-select-box { width: 100%; padding: 8px 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; font-size: 13px; outline: none; cursor: pointer; }
 
@@ -87,17 +109,7 @@
 
     <div class="sidebar">
         <div class="sidebar-top">
-            <!-- 完美的高级蓝绿渐变医疗图标（纯代码内嵌，无需上传文件） -->
-            <svg class="brand-icon-img" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="medGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#93c5fd"/>
-                        <stop offset="100%" stop-color="#86efac"/>
-                    </linearGradient>
-                </defs>
-                <path d="M853.33 213.33v469.34a85.33 85.33 0 0 1-85.33 85.33H341.33L170.67 938.67V213.33a85.33 85.33 0 0 1 85.33-85.33h512a85.33 85.33 0 0 1 85.33 85.33z" fill="url(#medGrad)"/>
-                <path d="M554.67 341.33h-85.34v128H341.33v85.34h128v128h85.34v-128h128v-85.34h-128v-128z" fill="#ffffff" opacity="0.9"/>
-            </svg>
+            <img src="logo.png" class="brand-icon-img" alt="Logo">
             <div class="brand-info">
                 <span class="brand-title">医疗智能辅助系统</span>
                 <span class="brand-subtitle"><span class="status-dot"></span>系统运行正常</span>
@@ -108,10 +120,36 @@
             <span>+</span> 开启新对话
         </div>
         
-        <div class="history-section">
+        <div class="history-section" id="historyListContainer">
             <div class="history-title">历史问诊记录</div>
-            <div class="history-item active" onclick="loadHistoryDemo('半夜孩子发高烧应对方案')">👶 半夜孩子发高烧应对方案</div>
-            <div class="history-item" onclick="loadHistoryDemo('高血压日常注意事项')">🩺 高血压日常注意事项</div>
+            
+            <!-- 会话 1 -->
+            <div class="history-item active" onclick="loadHistoryDemo('半夜孩子发高烧应对方案', event)">
+                <span class="history-text">👶 半夜孩子发高烧应对方案</span>
+                <button class="menu-trigger" onclick="toggleMenu(event, 'menu1')">•••</button>
+                <div class="action-menu" id="menu1">
+                    <div class="menu-item" onclick="handleMenuAction('分享', '半夜孩子发高烧应对方案')">📤 分享</div>
+                    <div class="menu-item" onclick="handleMenuAction('重命名', '半夜孩子发高烧应对方案')">✏️ 重命名</div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '半夜孩子发高烧应对方案')">📌 置顶聊天</div>
+                    <div class="menu-item" onclick="handleMenuAction('归档', '半夜孩子发高烧应对方案')">📦 归档</div>
+                    <div class="menu-item danger" onclick="handleMenuAction('删除', '半夜孩子发高烧应对方案')">🗑️ 删除</div>
+                </div>
+            </div>
+
+            <!-- 会话 2 -->
+            <div class="history-item" onclick="loadHistoryDemo('高血压日常注意事项', event)">
+                <span class="history-text">🩺 高血压日常注意事项</span>
+                <button class="menu-trigger" onclick="toggleMenu(event, 'menu2')">•••</button>
+                <div class="action-menu" id="menu2">
+                    <div class="menu-item" onclick="handleMenuAction('分享', '高血压日常注意事项')">📤 分享</div>
+                    <div class="menu-item" onclick="handleMenuAction('重命名', '高血压日常注意事项')">✏️ 重命名</div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '高血压日常注意事项')">📌 置顶聊天</div>
+                    <div class="menu-item" onclick="handleMenuAction('归档', '高血压日常注意事项')">📦 归档</div>
+                    <div class="menu-item danger" onclick="handleMenuAction('删除', '高血压日常注意事项')">🗑️ 删除</div>
+                </div>
+            </div>
         </div>
 
         <div class="theme-selector">
@@ -146,6 +184,7 @@
     </div>
 
     <script>
+        // 主题切换
         function changeTheme(theme) {
             const root = document.documentElement;
             if (theme === 'system') {
@@ -161,13 +200,37 @@
         document.getElementById('themeSelect').value = savedTheme;
         changeTheme(savedTheme);
 
+        // 控制悬浮菜单显示/隐藏
+        function toggleMenu(event, menuId) {
+            event.stopPropagation(); // 阻止触发切换对话
+            // 关闭所有其他打开的菜单
+            document.querySelectorAll('.action-menu').forEach(m => {
+                if (m.id !== menuId) m.classList.remove('show');
+            });
+            const menu = document.getElementById(menuId);
+            menu.classList.toggle('show');
+        }
+
+        // 点击页面其他地方关闭菜单
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('show'));
+        });
+
+        // 模拟菜单各项功能触发
+        function handleMenuAction(action, title) {
+            alert(`已执行【${action}】操作：${title}`);
+        }
+
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
         }
 
-        function loadHistoryDemo(title) {
+        function loadHistoryDemo(title, event) {
+            // 如果点击的是右侧三点按钮，不触发加载对话
+            if (event && event.target.classList.contains('menu-trigger')) return;
+
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `
                 <div class="msg user-msg">${title}</div>
@@ -198,10 +261,7 @@
                 });
 
                 const data = await response.json();
-                
-                // 彻底清洗过滤所有星号及 Markdown 符号
                 let cleanAnswer = data.answer ? data.answer.replace(/[\*\_#]/g, '') : "❌ 抱歉，服务器响应异常。";
-
                 document.getElementById(loadingId).innerText = cleanAnswer;
             } catch (error) {
                 document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
