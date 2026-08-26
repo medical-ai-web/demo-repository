@@ -1,8 +1,7 @@
-![Auto Assign](https://github.com/medical-ai-web/demo-repository/actions/workflows/auto-assign.yml/badge.svg)
+# 🏥 医疗智能辅助系统 Web 端
 
-![Proof HTML](https://github.com/medical-ai-web/demo-repository/actions/workflows/proof-html.yml/badge.svg)
+欢迎来到本项目！这是一个基于 Dify 构建的医疗 AI 助手网页演示代码库。
 
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
+本系统旨在提供专业、温和的医疗辅助问诊体验。
 
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+👉 **点击右侧 About 区域的网址，即可在线体验真实的 AI 问诊悬浮窗！**
