@@ -3,33 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的医疗智能底座</title>
+    <title>医疗智能辅助系统 - 独立工作台</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        #chat-container { width: 100%; max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; height: 80vh; }
-        .header { background: #0F172A; color: white; padding: 20px; text-align: center; margin: 0; font-size: 18px; }
-        #chat-history { flex: 1; padding: 20px; overflow-y: auto; background: #fafafa; }
-        .msg { margin-bottom: 15px; padding: 12px 16px; border-radius: 8px; line-height: 1.5; font-size: 15px; max-width: 80%; }
-        .user-msg { background: #0F172A; color: white; margin-left: auto; border-bottom-right-radius: 0; }
-        .ai-msg { background: #e2e8f0; color: #1e293b; margin-right: auto; border-bottom-left-radius: 0; }
-        .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; }
-        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; font-size: 15px; }
-        button { margin-left: 10px; padding: 0 20px; background: #0F172A; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; transition: 0.2s; }
-        button:hover { background: #1e293b; }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; height: 100vh; display: flex; overflow: hidden; }
+
+        /* 左侧边栏 */
+        .sidebar { width: 260px; background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
+        .sidebar-header { padding: 20px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; }
+        .new-chat-btn { margin: 15px; padding: 10px; background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 8px; cursor: pointer; text-align: center; font-size: 14px; transition: 0.2s; }
+        .new-chat-btn:hover { background-color: #334155; }
+        .history-list { flex: 1; padding: 10px 15px; overflow-y: auto; font-size: 14px; color: #94a3b8; }
+        .history-item { padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 5px; background: #1e293b; color: #f8fafc; }
+
+        /* 右侧主聊天区 */
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #ffffff; height: 100vh; }
+        .chat-header { padding: 15px 25px; border-bottom: 1px solid #e2e8f0; font-size: 16px; font-weight: 600; color: #0f172a; background: #ffffff; display: flex; align-items: center; justify-content: space-between; }
+        
+        #chat-history { flex: 1; padding: 25px; overflow-y: auto; background-color: #f8fafc; display: flex; flex-direction: column; gap: 20px; }
+        
+        .msg { max-width: 75%; padding: 14px 18px; border-radius: 12px; line-height: 1.6; font-size: 15px; word-break: break-all; }
+        .user-msg { background-color: #0f172a; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .ai-msg { background-color: #ffffff; color: #1e293b; align-self: flex-start; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+
+        /* 底部输入框区 */
+        .input-area-wrapper { padding: 20px 25px; background-color: #ffffff; border-top: 1px solid #e2e8f0; }
+        .input-box { display: flex; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 8px 15px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
+        .input-box:focus-within { border-color: #0f172a; background: #ffffff; }
+        
+        input { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; padding: 8px; color: #0f172a; }
+        button { background-color: #0f172a; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.2s; }
+        button:hover { background-color: #1e293b; }
     </style>
 </head>
 <body>
 
-    <div id="chat-container">
-        <h3 class="header">🏥 医疗智能辅助系统</h3>
+    <!-- 左侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <span>🏥</span> 医疗智能工作台
+        </div>
+        <div class="new-chat-btn" onclick="location.reload()">+ 开启新对话</div>
+        <div class="history-list">
+            <div style="font-size: 12px; color: #64748b; margin-bottom: 8px; padding-left: 5px;">历史会话</div>
+            <div class="history-item">当前会话：医疗辅助问诊</div>
+        </div>
+    </div>
+
+    <!-- 右侧主内容 -->
+    <div class="main-content">
+        <div class="chat-header">
+            <span>医疗底座 A (独立定制版)</span>
+            <span style="font-size: 13px; color: #64748b; font-weight: normal;">Secure Backend Mode</span>
+        </div>
         
+        <!-- 聊天记录滚动区 -->
         <div id="chat-history">
             <div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状。</div>
         </div>
         
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="请输入您的问题..." onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()">发送</button>
+        <!-- 底部输入框 -->
+        <div class="input-area-wrapper">
+            <div class="input-box">
+                <input type="text" id="user-input" placeholder="输入您想咨询的医疗问题..." onkeypress="handleEnter(event)">
+                <button onclick="sendMessage()">发送</button>
+            </div>
         </div>
     </div>
 
@@ -41,17 +79,17 @@
             
             if (!userText) return;
 
-            // 1. 把用户发的话显示在界面上
+            // 1. 渲染用户消息
             chatHistory.innerHTML += `<div class="msg user-msg">${userText}</div>`;
             inputField.value = '';
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            // 2. 显示一个“正在分析”的占位符
+            // 2. 渲染加载占位符
             const loadingId = 'loading-' + Date.now();
-            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在分析，请稍候...</div>`;
+            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在分析医学特征，请稍候...</div>`;
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            // 3. 向你的 Vercel 后端发送请求 (这里已经替换成了安全的 /api/chat)
+            // 3. 安全请求 Vercel 后端
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
@@ -61,20 +99,18 @@
 
                 const data = await response.json();
                 
-                // 4. 收到 Vercel 传回来的回答后，替换掉“正在分析”
                 if(data.answer) {
                     document.getElementById(loadingId).innerText = data.answer;
                 } else {
-                    document.getElementById(loadingId).innerText = "❌ 抱歉，连接服务器失败。";
+                    document.getElementById(loadingId).innerText = "❌ 抱歉，服务器响应异常。";
                 }
             } catch (error) {
-                document.getElementById(loadingId).innerText = "❌ 网络错误，请检查设置。";
+                document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
             }
             
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
 
-        // 让回车键也能发送消息
         function handleEnter(e) {
             if (e.key === 'Enter') sendMessage();
         }
