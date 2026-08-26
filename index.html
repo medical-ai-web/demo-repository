@@ -60,7 +60,7 @@
         .history-section { flex: 1; margin-top: 20px; overflow-y: auto; }
         .history-title { font-size: 12px; color: var(--text-muted); padding: 4px 10px; margin-bottom: 4px; }
         
-        /* 会话条目样式优化（支持右侧三点菜单悬浮） */
+        /* 会话条目样式 */
         .history-item { position: relative; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
         .history-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
         .history-item.active { background-color: var(--bg-hover); color: var(--text-main); }
@@ -70,11 +70,15 @@
         .history-item:hover .menu-trigger { opacity: 1; }
         .menu-trigger:hover { background: var(--border-color); color: var(--text-main); }
 
-        /* 🌟 高定悬浮菜单弹窗（完全还原图中样式） */
-        .action-menu { position: absolute; left: 180px; top: 35px; width: 160px; background-color: var(--menu-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; display: none; padding: 6px; }
+        /* 🌟 完美的线性图标统一浮动菜单（修复定位，绝对不会被切断） */
+        .action-menu { position: absolute; left: 215px; top: 0; width: 160px; background-color: var(--menu-bg); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; display: none; padding: 6px; }
         .action-menu.show { display: block; }
         .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13px; color: var(--text-main); border-radius: 6px; cursor: pointer; transition: 0.15s; }
         .menu-item:hover { background-color: var(--menu-hover); }
+        
+        /* 线性统一的 SVG 图标样式 */
+        .menu-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        
         .menu-divider { height: 1px; background-color: var(--border-color); margin: 4px 0; }
         .menu-item.danger { color: var(--danger-color); }
         .menu-item.danger:hover { background-color: rgba(248, 113, 113, 0.1); }
@@ -128,12 +132,27 @@
                 <span class="history-text">👶 半夜孩子发高烧应对方案</span>
                 <button class="menu-trigger" onclick="toggleMenu(event, 'menu1')">•••</button>
                 <div class="action-menu" id="menu1">
-                    <div class="menu-item" onclick="handleMenuAction('分享', '半夜孩子发高烧应对方案')">📤 分享</div>
-                    <div class="menu-item" onclick="handleMenuAction('重命名', '半夜孩子发高烧应对方案')">✏️ 重命名</div>
+                    <div class="menu-item" onclick="handleMenuAction('分享', '半夜孩子发高烧应对方案')">
+                        <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        分享
+                    </div>
+                    <div class="menu-item" onclick="handleMenuAction('重命名', '半夜孩子发高烧应对方案')">
+                        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        重命名
+                    </div>
                     <div class="menu-divider"></div>
-                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '半夜孩子发高烧应对方案')">📌 置顶聊天</div>
-                    <div class="menu-item" onclick="handleMenuAction('归档', '半夜孩子发高烧应对方案')">📦 归档</div>
-                    <div class="menu-item danger" onclick="handleMenuAction('删除', '半夜孩子发高烧应对方案')">🗑️ 删除</div>
+                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '半夜孩子发高烧应对方案')">
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+                        置顶聊天
+                    </div>
+                    <div class="menu-item" onclick="handleMenuAction('归档', '半夜孩子发高烧应对方案')">
+                        <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                        归档
+                    </div>
+                    <div class="menu-item danger" onclick="handleMenuAction('删除', '半夜孩子发高烧应对方案')">
+                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        删除
+                    </div>
                 </div>
             </div>
 
@@ -142,12 +161,27 @@
                 <span class="history-text">🩺 高血压日常注意事项</span>
                 <button class="menu-trigger" onclick="toggleMenu(event, 'menu2')">•••</button>
                 <div class="action-menu" id="menu2">
-                    <div class="menu-item" onclick="handleMenuAction('分享', '高血压日常注意事项')">📤 分享</div>
-                    <div class="menu-item" onclick="handleMenuAction('重命名', '高血压日常注意事项')">✏️ 重命名</div>
+                    <div class="menu-item" onclick="handleMenuAction('分享', '高血压日常注意事项')">
+                        <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        分享
+                    </div>
+                    <div class="menu-item" onclick="handleMenuAction('重命名', '高血压日常注意事项')">
+                        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        重命名
+                    </div>
                     <div class="menu-divider"></div>
-                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '高血压日常注意事项')">📌 置顶聊天</div>
-                    <div class="menu-item" onclick="handleMenuAction('归档', '高血压日常注意事项')">📦 归档</div>
-                    <div class="menu-item danger" onclick="handleMenuAction('删除', '高血压日常注意事项')">🗑️ 删除</div>
+                    <div class="menu-item" onclick="handleMenuAction('置顶聊天', '高血压日常注意事项')">
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+                        置顶聊天
+                    </div>
+                    <div class="menu-item" onclick="handleMenuAction('归档', '高血压日常注意事项')">
+                        <svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                        归档
+                    </div>
+                    <div class="menu-item danger" onclick="handleMenuAction('删除', '高血压日常注意事项')">
+                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        删除
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,7 +218,6 @@
     </div>
 
     <script>
-        // 主题切换
         function changeTheme(theme) {
             const root = document.documentElement;
             if (theme === 'system') {
@@ -200,10 +233,8 @@
         document.getElementById('themeSelect').value = savedTheme;
         changeTheme(savedTheme);
 
-        // 控制悬浮菜单显示/隐藏
         function toggleMenu(event, menuId) {
-            event.stopPropagation(); // 阻止触发切换对话
-            // 关闭所有其他打开的菜单
+            event.stopPropagation();
             document.querySelectorAll('.action-menu').forEach(m => {
                 if (m.id !== menuId) m.classList.remove('show');
             });
@@ -211,12 +242,10 @@
             menu.classList.toggle('show');
         }
 
-        // 点击页面其他地方关闭菜单
         window.addEventListener('click', () => {
             document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('show'));
         });
 
-        // 模拟菜单各项功能触发
         function handleMenuAction(action, title) {
             alert(`已执行【${action}】操作：${title}`);
         }
@@ -228,7 +257,6 @@
         }
 
         function loadHistoryDemo(title, event) {
-            // 如果点击的是右侧三点按钮，不触发加载对话
             if (event && event.target.classList.contains('menu-trigger')) return;
 
             const chatHistory = document.getElementById('chat-history');
