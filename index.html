@@ -134,14 +134,10 @@
         
         <div class="history-section">
             <div class="section-title">已置顶</div>
-            <div id="pinned-container">
-                <!-- 初始状态为空，无硬编码记录 -->
-            </div>
+            <div id="pinned-container"></div>
 
             <div class="section-title">最近</div>
-            <div id="recent-container">
-                <!-- 初始状态为空，无硬编码记录 -->
-            </div>
+            <div id="recent-container"></div>
         </div>
 
         <!-- 高级 Theme 浮动切换面板 -->
@@ -189,7 +185,7 @@
 
     <div class="main-content">
         <div class="chat-header">
-            <span id="header-title">医疗底座 A 智能专家咨询中</span>
+            <span id="header-title">医疗智能辅助系统</span>
             <span style="font-size: 11px; opacity: 0.8;">Secure Backend Active</span>
         </div>
         
@@ -232,6 +228,7 @@
 
     <script>
         let currentActiveItemId = null;
+        let activeHistoryId = null; // 跟踪当前对话是否已绑定左侧历史记录
 
         window.addEventListener('DOMContentLoaded', () => {
             applyCustomLogo();
@@ -336,7 +333,7 @@
                             closeAdminSettings();
                             alert("✅ 网站图标修改成功并已永久保存！");
                         } catch (err) {
-                            alert("❌ 保存失败：存储空间不足，请尝试使用更小的图片或图片链接。");
+                            alert("❌ 保存失败：存储空间不足。");
                         }
                     };
                     img.src = e.target.result;
@@ -457,13 +454,20 @@
             }
         }
 
+        // 🌟 点击开启新对话：清空右侧屏幕，重置状态，不生成任何垃圾侧边栏占位符
         function startNewChat() {
+            activeHistoryId = null;
+            document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
             
-            document.getElementById('header-title').innerText = "新对话 - 医疗智能辅助系统";
+            document.getElementById('header-title').innerText = "医疗智能辅助系统";
+        }
 
+        // 🌟 动态添加侧边栏历史记录
+        function addHistoryItem(title) {
             const recentContainer = document.getElementById('recent-container');
             const newId = 'item-' + Date.now();
             
@@ -472,55 +476,48 @@
             const newItem = document.createElement('div');
             newItem.className = 'history-item active';
             newItem.id = newId;
-            newItem.onclick = function(e) { loadHistoryItem('新医疗咨询会话', e); };
+            newItem.onclick = function(e) { loadHistoryItem(title, newId, e); };
             newItem.innerHTML = `
-                <span class="history-text">新医疗咨询会话</span>
+                <span class="history-text">${title}</span>
                 <div class="item-actions">
                     <button class="action-btn pin-btn" title="置顶" onclick="togglePin('${newId}', event)"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg></button>
                     <button class="action-btn" title="更多" onclick="toggleMenu(event, '${newId}')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
                 </div>
             `;
             recentContainer.prepend(newItem);
+            activeHistoryId = newId;
+            document.getElementById('header-title').innerText = title + " - 咨询中";
         }
 
-        async function loadHistoryItem(title, event) {
+        function loadHistoryItem(title, itemId, event) {
             if (event && event.target.closest('.item-actions')) return;
 
             document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
-            const clickedItem = event.currentTarget;
+            const clickedItem = document.getElementById(itemId);
             if (clickedItem) clickedItem.classList.add('active');
+            activeHistoryId = itemId;
 
             document.getElementById('header-title').innerText = title + " - 咨询中";
 
             const chatHistory = document.getElementById('chat-history');
-            chatHistory.innerHTML = `<div class="msg user-msg">${title}</div>`;
-
-            const loadingId = 'loading-' + Date.now();
-            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在连接 Dify 后端获取专家建议...</div>`;
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: title }) 
-                });
-
-                const data = await response.json();
-                let cleanAnswer = data.answer ? data.answer.replace(/[\*\_#]/g, '') : "❌ 抱歉，服务器响应异常。";
-                document.getElementById(loadingId).innerText = cleanAnswer;
-            } catch (error) {
-                document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
-            }
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+            chatHistory.innerHTML = `
+                <div class="msg user-msg">${title}</div>
+                <div class="msg ai-msg">已为您加载“${title}”的历史会话。您可以继续在此基础上咨询。</div>
+            `;
         }
 
+        // 🌟 发送消息：如果是新对话的第一条消息，自动将该消息文字作为侧边栏历史标题
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const chatHistory = document.getElementById('chat-history');
             const userText = inputField.value.trim();
             
             if (!userText) return;
+
+            // 如果当前没有关联的历史会话，自动以第一条发言作为左侧标题
+            if (!activeHistoryId) {
+                addHistoryItem(userText);
+            }
 
             chatHistory.innerHTML += `<div class="msg user-msg">${userText}</div>`;
             inputField.value = '';
