@@ -228,7 +228,7 @@
 
     <script>
         let currentActiveItemId = null;
-        let activeHistoryId = null; // 跟踪当前对话是否已绑定左侧历史记录
+        let activeHistoryId = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             applyCustomLogo();
@@ -454,7 +454,6 @@
             }
         }
 
-        // 🌟 点击开启新对话：清空右侧屏幕，重置状态，不生成任何垃圾侧边栏占位符
         function startNewChat() {
             activeHistoryId = null;
             document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
@@ -466,7 +465,6 @@
             document.getElementById('header-title').innerText = "医疗智能辅助系统";
         }
 
-        // 🌟 动态添加侧边栏历史记录
         function addHistoryItem(title) {
             const recentContainer = document.getElementById('recent-container');
             const newId = 'item-' + Date.now();
@@ -489,7 +487,8 @@
             document.getElementById('header-title').innerText = title + " - 咨询中";
         }
 
-        function loadHistoryItem(title, itemId, event) {
+        // 🌟 已修复：点击左侧历史记录时，真正调用 Dify 后端查询，而不是显示静态文本
+        async function loadHistoryItem(title, itemId, event) {
             if (event && event.target.closest('.item-actions')) return;
 
             document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
@@ -500,13 +499,28 @@
             document.getElementById('header-title').innerText = title + " - 咨询中";
 
             const chatHistory = document.getElementById('chat-history');
-            chatHistory.innerHTML = `
-                <div class="msg user-msg">${title}</div>
-                <div class="msg ai-msg">已为您加载“${title}”的历史会话。您可以继续在此基础上咨询。</div>
-            `;
+            chatHistory.innerHTML = `<div class="msg user-msg">${title}</div>`;
+
+            const loadingId = 'loading-' + Date.now();
+            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在连接 Dify 后端获取专家建议...</div>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: title }) 
+                });
+
+                const data = await response.json();
+                let cleanAnswer = data.answer ? data.answer.replace(/[\*\_#]/g, '') : "❌ 抱歉，服务器响应异常。";
+                document.getElementById(loadingId).innerText = cleanAnswer;
+            } catch (error) {
+                document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
         }
 
-        // 🌟 发送消息：如果是新对话的第一条消息，自动将该消息文字作为侧边栏历史标题
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const chatHistory = document.getElementById('chat-history');
@@ -514,7 +528,6 @@
             
             if (!userText) return;
 
-            // 如果当前没有关联的历史会话，自动以第一条发言作为左侧标题
             if (!activeHistoryId) {
                 addHistoryItem(userText);
             }
