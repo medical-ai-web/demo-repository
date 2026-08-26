@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>医疗智能辅助系统</title>
-    <!-- PWA 独立窗口配置支持 -->
     <meta name="application-name" content="医疗智能辅助系统">
     <style>
         :root[data-theme="dark"] {
@@ -34,10 +33,24 @@
         body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; transition: background 0.3s, color 0.3s; }
 
         /* 左侧边栏 */
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 12px; transition: background 0.3s, border 0.3s; }
-        .sidebar-top { padding: 8px 10px; font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 14px; transition: background 0.3s, border 0.3s; }
         
-        .new-chat-btn { margin-top: 10px; padding: 10px 12px; background-color: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        /* 🌟 升级后的品牌栏：完美容纳图1图标与状态呼吸灯 */
+        .sidebar-top { display: flex; align-items: center; gap: 10px; padding: 8px 6px; margin-bottom: 8px; }
+        .brand-icon-img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .brand-info { display: flex; flex-direction: column; }
+        .brand-title { font-size: 14px; font-weight: 600; color: var(--text-main); letter-spacing: 0.2px; }
+        .brand-subtitle { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+        
+        /* 绿色专业脉冲呼吸灯 */
+        .status-dot { width: 7px; height: 7px; background-color: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 10px #10b981; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        
+        .new-chat-btn { margin-top: 6px; padding: 10px 12px; background-color: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .new-chat-btn:hover { background-color: var(--bg-hover); }
 
         .history-section { flex: 1; margin-top: 20px; overflow-y: auto; }
@@ -52,7 +65,7 @@
 
         /* 右侧主聊天区 */
         .main-content { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-main); position: relative; }
-        .chat-header { padding: 14px 24px; font-size: 14px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .chat-header { padding: 14px 24px; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
         
         /* 聊天滚动区 */
         #chat-history { flex: 1; padding: 20px 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; max-width: 900px; width: 100%; margin: 0 auto; }
@@ -77,8 +90,14 @@
 
     <!-- 左侧边栏 -->
     <div class="sidebar">
+        <!-- 🌟 左上角嵌入图1的精美图标与绿色运行指示灯 -->
         <div class="sidebar-top">
-            <span>🏥 医疗辅助工作台</span>
+            <!-- 这里使用了你图1的图片链接或相对路径 -->
+            <img src="image_2f15c6.png" class="brand-icon-img" alt="Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%233b82f6\'><path d=\'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-4H7v-2h4V7h2v4h4v2h-4z\'/></svg>'">
+            <div class="brand-info">
+                <span class="brand-title">医疗智能辅助系统</span>
+                <span class="brand-subtitle"><span class="status-dot"></span>系统运行正常</span>
+            </div>
         </div>
         
         <div class="new-chat-btn" onclick="startNewChat()">
@@ -106,10 +125,10 @@
     <div class="main-content">
         <div class="chat-header">
             <span>医疗底座 A 智能专家咨询中</span>
-            <span style="font-size: 12px;">Secure Backend Active</span>
+            <span style="font-size: 11px; opacity: 0.8;">Secure Backend Active</span>
         </div>
         
-        <!-- 聊天记录区（已写入精确的医疗免责声明） -->
+        <!-- 聊天记录区（含你要求的完整专业免责声明） -->
         <div id="chat-history">
             <div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
 ⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>
@@ -127,7 +146,6 @@
     </div>
 
     <script>
-        // 主题切换
         function changeTheme(theme) {
             const root = document.documentElement;
             if (theme === 'system') {
@@ -143,14 +161,12 @@
         document.getElementById('themeSelect').value = savedTheme;
         changeTheme(savedTheme);
 
-        // 开启新对话
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
 ⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
         }
 
-        // 点击历史记录模拟切换
         function loadHistoryDemo(title) {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `
@@ -159,7 +175,6 @@
             `;
         }
 
-        // 核心发送逻辑
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const chatHistory = document.getElementById('chat-history');
