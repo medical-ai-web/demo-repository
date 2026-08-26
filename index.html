@@ -1,77 +1,165 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>医疗智能辅助系统 - 独立工作台</title>
+    <title>医疗智能辅助系统</title>
     <style>
+        /* 主题颜色变量定义 */
+        :root[data-theme="dark"] {
+            --bg-sidebar: #171717;
+            --bg-main: #212121;
+            --bg-hover: #2a2a2a;
+            --border-color: #2f2f2f;
+            --text-main: #ececec;
+            --text-muted: #8e8e8e;
+            --input-bg: #2f2f2f;
+            --input-border: #3f3f3f;
+            --user-msg-bg: #2f2f2f;
+        }
+        :root[data-theme="light"] {
+            --bg-sidebar: #f9f9f9;
+            --bg-main: #ffffff;
+            --bg-hover: #eaeaea;
+            --border-color: #e5e5e5;
+            --text-main: #171717;
+            --text-muted: #6e6e6e;
+            --input-bg: #f4f4f4;
+            --input-border: #dcdcdc;
+            --user-msg-bg: #f0f0f0;
+        }
+
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; height: 100vh; display: flex; overflow: hidden; }
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; transition: background 0.3s, color 0.3s; }
 
         /* 左侧边栏 */
-        .sidebar { width: 260px; background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
-        .sidebar-header { padding: 20px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 10px; }
-        .new-chat-btn { margin: 15px; padding: 10px; background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 8px; cursor: pointer; text-align: center; font-size: 14px; transition: 0.2s; }
-        .new-chat-btn:hover { background-color: #334155; }
-        .history-list { flex: 1; padding: 10px 15px; overflow-y: auto; font-size: 14px; color: #94a3b8; }
-        .history-item { padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 5px; background: #1e293b; color: #f8fafc; }
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 12px; transition: background 0.3s, border 0.3s; }
+        .sidebar-top { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; }
+        .sidebar-top:hover { background-color: var(--bg-hover); }
+        
+        .new-chat-btn { margin-top: 10px; padding: 10px 12px; background-color: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .new-chat-btn:hover { background-color: var(--bg-hover); }
+
+        .nav-list { margin-top: 15px; display: flex; flex-direction: column; gap: 2px; }
+        .nav-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .nav-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
+
+        .history-section { flex: 1; margin-top: 15px; overflow-y: auto; }
+        .history-title { font-size: 12px; color: var(--text-muted); padding: 4px 10px; margin-bottom: 4px; }
+        .history-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
+
+        /* 左侧底部：主题切换控制面板 */
+        .theme-selector { padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
+        .theme-select-box { width: 100%; padding: 8px 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; font-size: 13px; outline: none; cursor: pointer; }
 
         /* 右侧主聊天区 */
-        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #ffffff; height: 100vh; }
-        .chat-header { padding: 15px 25px; border-bottom: 1px solid #e2e8f0; font-size: 16px; font-weight: 600; color: #0f172a; background: #ffffff; display: flex; align-items: center; justify-content: space-between; }
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-main); position: relative; }
+        .chat-header { padding: 12px 20px; font-size: 14px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
         
-        #chat-history { flex: 1; padding: 25px; overflow-y: auto; background-color: #f8fafc; display: flex; flex-direction: column; gap: 20px; }
-        
-        .msg { max-width: 75%; padding: 14px 18px; border-radius: 12px; line-height: 1.6; font-size: 15px; word-break: break-all; }
-        .user-msg { background-color: #0f172a; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .ai-msg { background-color: #ffffff; color: #1e293b; align-self: flex-start; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .mode-switch { display: flex; background: var(--input-bg); padding: 3px; border-radius: 8px; gap: 2px; }
+        .mode-btn { padding: 4px 14px; font-size: 13px; border: none; background: transparent; color: var(--text-muted); border-radius: 6px; cursor: pointer; }
+        .mode-btn.active { background: var(--bg-main); color: var(--text-main); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-        /* 底部输入框区 */
-        .input-area-wrapper { padding: 20px 25px; background-color: #ffffff; border-top: 1px solid #e2e8f0; }
-        .input-box { display: flex; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 8px 15px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
-        .input-box:focus-within { border-color: #0f172a; background: #ffffff; }
+        /* 聊天滚动区 */
+        #chat-history { flex: 1; padding: 20px 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; max-width: 900px; width: 100%; margin: 0 auto; }
+        .msg { line-height: 1.6; font-size: 15px; max-width: 85%; word-break: break-all; }
+        .user-msg { background-color: var(--user-msg-bg); padding: 10px 16px; border-radius: 12px; align-self: flex-end; }
+        .ai-msg { background-color: transparent; color: var(--text-main); align-self: flex-start; }
+
+        /* 底部悬浮输入框 */
+        .input-area-wrapper { padding: 15px 20px 25px 20px; display: flex; justify-content: center; background: linear-gradient(to top, var(--bg-main) 80%, rgba(0,0,0,0)); }
+        .input-box { width: 100%; max-width: 800px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 16px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .input-box:focus-within { border-color: var(--text-muted); }
         
-        input { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; padding: 8px; color: #0f172a; }
-        button { background-color: #0f172a; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.2s; }
-        button:hover { background-color: #1e293b; }
+        input { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; color: var(--text-main); }
+        input::placeholder { color: var(--text-muted); }
+        
+        .action-icon { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 4px; }
+        .send-btn { background-color: var(--text-main); color: var(--bg-main); border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .send-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <!-- 左侧边栏 -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            <span>🏥</span> 医疗智能工作台
+        <div class="sidebar-top">
+            <span>医疗工作台 ▾</span>
         </div>
-        <div class="new-chat-btn" onclick="location.reload()">+ 开启新对话</div>
-        <div class="history-list">
-            <div style="font-size: 12px; color: #64748b; margin-bottom: 8px; padding-left: 5px;">历史会话</div>
-            <div class="history-item">当前会话：医疗辅助问诊</div>
+        
+        <div class="new-chat-btn" onclick="location.reload()">
+            <span>+</span> 新聊天
+        </div>
+
+        <div class="nav-list">
+            <div class="nav-item">💬 问诊大厅</div>
+            <div class="nav-item">📁 医疗知识库</div>
+            <div class="nav-item">⚙️ 系统设置</div>
+        </div>
+        
+        <div class="history-section">
+            <div class="history-title">历史会话</div>
+            <div class="history-item">半夜孩子发高烧应对方案</div>
+            <div class="history-item">高血压日常注意事项</div>
+        </div>
+
+        <!-- 动态日间/夜间/随系统模式切换 -->
+        <div class="theme-selector">
+            <div class="history-title" style="padding:0;">界面主题模式</div>
+            <select class="theme-select-box" id="themeSelect" onchange="changeTheme(this.value)">
+                <option value="dark">🌙 夜间模式</option>
+                <option value="light">☀️ 日间模式</option>
+                <option value="system">💻 跟随系统</option>
+            </select>
         </div>
     </div>
 
     <!-- 右侧主内容 -->
     <div class="main-content">
         <div class="chat-header">
-            <span>医疗底座 A (独立定制版)</span>
-            <span style="font-size: 13px; color: #64748b; font-weight: normal;">Secure Backend Mode</span>
+            <span>医疗底座 A 智能专家</span>
+            <div class="mode-switch">
+                <button class="mode-btn active">聊天</button>
+                <button class="mode-btn">工作台</button>
+            </div>
         </div>
         
-        <!-- 聊天记录滚动区 -->
+        <!-- 聊天记录区 -->
         <div id="chat-history">
-            <div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状。</div>
+            <div class="msg ai-msg">您好！我是医疗智能底座助理。请告诉我您的症状或咨询需求，我将为您提供专业的辅助分析。</div>
         </div>
         
         <!-- 底部输入框 -->
         <div class="input-area-wrapper">
             <div class="input-box">
-                <input type="text" id="user-input" placeholder="输入您想咨询的医疗问题..." onkeypress="handleEnter(event)">
-                <button onclick="sendMessage()">发送</button>
+                <button class="action-icon">＋</button>
+                <input type="text" id="user-input" placeholder="给 医疗底座 发送消息..." onkeypress="handleEnter(event)">
+                <button class="action-icon">🎤</button>
+                <button class="send-btn" onclick="sendMessage()">↑</button>
             </div>
         </div>
     </div>
 
     <script>
+        // 主题切换逻辑
+        function changeTheme(theme) {
+            const root = document.documentElement;
+            if (theme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                root.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem('user-theme', theme);
+        }
+
+        // 初始化加载保存的主题
+        const savedTheme = localStorage.getItem('user-theme') || 'dark';
+        document.getElementById('themeSelect').value = savedTheme;
+        changeTheme(savedTheme);
+
+        // 聊天发送核心逻辑
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const chatHistory = document.getElementById('chat-history');
@@ -79,17 +167,14 @@
             
             if (!userText) return;
 
-            // 1. 渲染用户消息
             chatHistory.innerHTML += `<div class="msg user-msg">${userText}</div>`;
             inputField.value = '';
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            // 2. 渲染加载占位符
             const loadingId = 'loading-' + Date.now();
-            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在分析医学特征，请稍候...</div>`;
+            chatHistory.innerHTML += `<div class="msg ai-msg" id="${loadingId}">正在分析临床特征...</div>`;
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            // 3. 安全请求 Vercel 后端
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
