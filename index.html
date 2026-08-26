@@ -35,7 +35,6 @@
         /* 左侧边栏 */
         .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 14px; transition: background 0.3s, border 0.3s; }
         
-        /* 🌟 升级后的品牌栏：完美容纳图1图标与状态呼吸灯 */
         .sidebar-top { display: flex; align-items: center; gap: 10px; padding: 8px 6px; margin-bottom: 8px; }
         .brand-icon-img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .brand-info { display: flex; flex-direction: column; }
@@ -59,7 +58,6 @@
         .history-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
         .history-item.active { background-color: var(--bg-hover); color: var(--text-main); }
 
-        /* 主题选择 */
         .theme-selector { padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
         .theme-select-box { width: 100%; padding: 8px 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; font-size: 13px; outline: none; cursor: pointer; }
 
@@ -67,7 +65,6 @@
         .main-content { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-main); position: relative; }
         .chat-header { padding: 14px 24px; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
         
-        /* 聊天滚动区 */
         #chat-history { flex: 1; padding: 20px 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; max-width: 900px; width: 100%; margin: 0 auto; }
         .msg { line-height: 1.6; font-size: 15px; max-width: 85%; word-break: break-all; white-space: pre-wrap; }
         .user-msg { background-color: var(--user-msg-bg); padding: 10px 16px; border-radius: 12px; align-self: flex-end; }
@@ -88,12 +85,19 @@
 </head>
 <body>
 
-    <!-- 左侧边栏 -->
     <div class="sidebar">
-        <!-- 🌟 左上角嵌入图1的精美图标与绿色运行指示灯 -->
         <div class="sidebar-top">
-            <!-- 这里使用了你图1的图片链接或相对路径 -->
-            <img src="image_2f15c6.png" class="brand-icon-img" alt="Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%233b82f6\'><path d=\'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-4H7v-2h4V7h2v4h4v2h-4z\'/></svg>'">
+            <!-- 完美的高级蓝绿渐变医疗图标（纯代码内嵌，无需上传文件） -->
+            <svg class="brand-icon-img" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="medGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#93c5fd"/>
+                        <stop offset="100%" stop-color="#86efac"/>
+                    </linearGradient>
+                </defs>
+                <path d="M853.33 213.33v469.34a85.33 85.33 0 0 1-85.33 85.33H341.33L170.67 938.67V213.33a85.33 85.33 0 0 1 85.33-85.33h512a85.33 85.33 0 0 1 85.33 85.33z" fill="url(#medGrad)"/>
+                <path d="M554.67 341.33h-85.34v128H341.33v85.34h128v128h85.34v-128h128v-85.34h-128v-128z" fill="#ffffff" opacity="0.9"/>
+            </svg>
             <div class="brand-info">
                 <span class="brand-title">医疗智能辅助系统</span>
                 <span class="brand-subtitle"><span class="status-dot"></span>系统运行正常</span>
@@ -110,7 +114,6 @@
             <div class="history-item" onclick="loadHistoryDemo('高血压日常注意事项')">🩺 高血压日常注意事项</div>
         </div>
 
-        <!-- 主题切换 -->
         <div class="theme-selector">
             <div class="history-title" style="padding:0;">外观主题</div>
             <select class="theme-select-box" id="themeSelect" onchange="changeTheme(this.value)">
@@ -121,20 +124,17 @@
         </div>
     </div>
 
-    <!-- 右侧主内容 -->
     <div class="main-content">
         <div class="chat-header">
             <span>医疗底座 A 智能专家咨询中</span>
             <span style="font-size: 11px; opacity: 0.8;">Secure Backend Active</span>
         </div>
         
-        <!-- 聊天记录区（含你要求的完整专业免责声明） -->
         <div id="chat-history">
             <div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
-⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>
+【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>
         </div>
         
-        <!-- 底部输入框 -->
         <div class="input-area-wrapper">
             <div class="input-box">
                 <button class="action-icon" title="附加文件">＋</button>
@@ -164,7 +164,7 @@
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
-⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
+【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
         }
 
         function loadHistoryDemo(title) {
@@ -199,11 +199,10 @@
 
                 const data = await response.json();
                 
-                if(data.answer) {
-                    document.getElementById(loadingId).innerText = data.answer;
-                } else {
-                    document.getElementById(loadingId).innerText = "❌ 抱歉，服务器响应异常。";
-                }
+                // 彻底清洗过滤所有星号及 Markdown 符号
+                let cleanAnswer = data.answer ? data.answer.replace(/[\*\_#]/g, '') : "❌ 抱歉，服务器响应异常。";
+
+                document.getElementById(loadingId).innerText = cleanAnswer;
             } catch (error) {
                 document.getElementById(loadingId).innerText = "❌ 网络连接错误，请检查。";
             }
