@@ -80,7 +80,7 @@
         .menu-item.danger { color: var(--danger-color); }
         .menu-item.danger:hover { background-color: rgba(248, 113, 113, 0.1); }
 
-        /* 🌟 高定 Theme 菜单样式（严格参考截图） */
+        /* 高定 Theme 浮动切换面板 */
         .theme-footer { padding-top: 10px; border-top: 1px solid var(--border-color); position: relative; }
         .theme-trigger { width: 100%; padding: 9px 10px; background: transparent; border: none; color: var(--text-main); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; transition: 0.2s; }
         .theme-trigger:hover { background-color: var(--bg-hover); }
@@ -156,7 +156,7 @@
             </div>
         </div>
 
-        <!-- 🌟 高级 Theme 浮动切换面板 -->
+        <!-- 高级 Theme 浮动切换面板 -->
         <div class="theme-footer">
             <div class="theme-dropdown" id="themeDropdown" onclick="event.stopPropagation()">
                 <div class="theme-option" onclick="setTheme('system')">
@@ -175,7 +175,6 @@
 
             <button class="theme-trigger" onclick="toggleThemeDropdown(event)">
                 <div class="theme-trigger-left">
-                    <!-- 太阳与月亮组合高级图标 -->
                     <svg viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="4"></circle>
                         <path d="M12 2v2"></path><path d="M12 20v2"></path>
@@ -185,7 +184,6 @@
                     </svg>
                     <span>Theme</span>
                 </div>
-                <!-- ⚙️ 开发者齿轮入口 -->
                 <span onclick="openAdminSettings(event)" title="开发者设置：修改网站图标" style="cursor:pointer; font-size:14px; opacity:0.5; padding:2px 4px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">⚙️</span>
             </button>
         </div>
@@ -281,7 +279,6 @@
             setTheme(savedTheme, false);
         });
 
-        // 🌟 高级 Theme 菜单交互控制
         function toggleThemeDropdown(event) {
             event.stopPropagation();
             document.getElementById('themeDropdown').classList.toggle('show');
@@ -300,7 +297,6 @@
                 localStorage.setItem('user-theme', theme);
             }
 
-            // 更新选中状态的对勾显示
             document.getElementById('check-system').style.display = (theme === 'system') ? 'block' : 'none';
             document.getElementById('check-light').style.display = (theme === 'light') ? 'block' : 'none';
             document.getElementById('check-dark').style.display = (theme === 'dark') ? 'block' : 'none';
@@ -308,7 +304,7 @@
             document.getElementById('themeDropdown').classList.remove('show');
         }
 
-        // ⚙️ 开发者密码校验与图标管理逻辑
+        // ⚙️ 开发者图标管理与自动压缩防溢出逻辑
         function openAdminSettings(event) {
             event.stopPropagation();
             const pwd = prompt("🔐 请输入开发者管理密码：");
@@ -330,17 +326,45 @@
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    localStorage.setItem('developer_custom_logo', e.target.result);
-                    applyCustomLogo();
-                    closeAdminSettings();
-                    alert("✅ 网站图标修改成功！");
+                    const img = new Image();
+                    img.onload = function() {
+                        // 自动等比压缩至 120x120 像素，确保绝对不会超出 localStorage 存储容量
+                        const canvas = document.createElement('canvas');
+                        const MAX_SIZE = 120;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                        } else {
+                            if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const compressedDataUrl = canvas.toDataURL('image/png', 0.9);
+
+                        try {
+                            localStorage.setItem('developer_custom_logo', compressedDataUrl);
+                            applyCustomLogo();
+                            closeAdminSettings();
+                            alert("✅ 网站图标修改成功并已永久保存！");
+                        } catch (err) {
+                            alert("❌ 保存失败：存储空间不足，请尝试使用更小的图片或图片链接。");
+                        }
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else if (urlInput) {
-                localStorage.setItem('developer_custom_logo', urlInput);
-                applyCustomLogo();
-                closeAdminSettings();
-                alert("✅ 网站图标修改成功！");
+                try {
+                    localStorage.setItem('developer_custom_logo', urlInput);
+                    applyCustomLogo();
+                    closeAdminSettings();
+                    alert("✅ 网站图标修改成功并已永久保存！");
+                } catch (err) {
+                    alert("❌ 保存失败！");
+                }
             } else {
                 alert("⚠️ 请先选择图片文件或输入图片链接！");
             }
