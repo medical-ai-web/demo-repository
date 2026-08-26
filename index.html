@@ -80,8 +80,18 @@
         .menu-item.danger { color: var(--danger-color); }
         .menu-item.danger:hover { background-color: rgba(248, 113, 113, 0.1); }
 
-        .theme-selector { padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
-        .theme-select-box { width: 100%; padding: 8px 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; font-size: 13px; outline: none; cursor: pointer; }
+        /* 🌟 高定 Theme 菜单样式（严格参考截图） */
+        .theme-footer { padding-top: 10px; border-top: 1px solid var(--border-color); position: relative; }
+        .theme-trigger { width: 100%; padding: 9px 10px; background: transparent; border: none; color: var(--text-main); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; transition: 0.2s; }
+        .theme-trigger:hover { background-color: var(--bg-hover); }
+        .theme-trigger-left { display: flex; align-items: center; gap: 10px; }
+        .theme-trigger-left svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .theme-dropdown { position: absolute; bottom: 48px; left: 0; width: 100%; background-color: var(--menu-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 99999; display: none; padding: 6px; }
+        .theme-dropdown.show { display: block; }
+        .theme-option { padding: 10px 12px; font-size: 14px; color: var(--text-main); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.15s; }
+        .theme-option:hover { background-color: var(--menu-hover); }
+        .theme-option svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
         .main-content { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-main); position: relative; }
         .chat-header { padding: 14px 24px; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
@@ -146,17 +156,38 @@
             </div>
         </div>
 
-        <div class="theme-selector">
-            <div class="section-title" style="padding:0;">
-                外观主题
-                <!-- ⚙️ 开发者专属管理入口 -->
-                <span onclick="openAdminSettings()" title="开发者设置：修改网站图标" style="cursor:pointer; font-size:14px; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">⚙️</span>
+        <!-- 🌟 高级 Theme 浮动切换面板 -->
+        <div class="theme-footer">
+            <div class="theme-dropdown" id="themeDropdown" onclick="event.stopPropagation()">
+                <div class="theme-option" onclick="setTheme('system')">
+                    <span>System</span>
+                    <svg id="check-system" style="display:none;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="theme-option" onclick="setTheme('light')">
+                    <span>Light</span>
+                    <svg id="check-light" style="display:none;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="theme-option" onclick="setTheme('dark')">
+                    <span>Dark</span>
+                    <svg id="check-dark" style="display:none;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
             </div>
-            <select class="theme-select-box" id="themeSelect" onchange="changeTheme(this.value)">
-                <option value="dark">🌙 夜间模式</option>
-                <option value="light">☀️ 日间模式</option>
-                <option value="system">💻 跟随系统</option>
-            </select>
+
+            <button class="theme-trigger" onclick="toggleThemeDropdown(event)">
+                <div class="theme-trigger-left">
+                    <!-- 太阳与月亮组合高级图标 -->
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                        <path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path>
+                        <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                        <path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path>
+                    </svg>
+                    <span>Theme</span>
+                </div>
+                <!-- ⚙️ 开发者齿轮入口 -->
+                <span onclick="openAdminSettings(event)" title="开发者设置：修改网站图标" style="cursor:pointer; font-size:14px; opacity:0.5; padding:2px 4px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">⚙️</span>
+            </button>
         </div>
     </div>
 
@@ -217,7 +248,6 @@
         let currentActiveItemId = null;
 
         window.addEventListener('DOMContentLoaded', () => {
-            // 加载开发者自定义图标
             applyCustomLogo();
 
             const params = new URLSearchParams(window.location.search);
@@ -248,14 +278,41 @@
             }
 
             const savedTheme = localStorage.getItem('user-theme') || 'dark';
-            document.getElementById('themeSelect').value = savedTheme;
-            changeTheme(savedTheme);
+            setTheme(savedTheme, false);
         });
 
+        // 🌟 高级 Theme 菜单交互控制
+        function toggleThemeDropdown(event) {
+            event.stopPropagation();
+            document.getElementById('themeDropdown').classList.toggle('show');
+            document.getElementById('globalMenu').classList.remove('show');
+        }
+
+        function setTheme(theme, save = true) {
+            const root = document.documentElement;
+            if (theme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                root.setAttribute('data-theme', theme);
+            }
+            if (save) {
+                localStorage.setItem('user-theme', theme);
+            }
+
+            // 更新选中状态的对勾显示
+            document.getElementById('check-system').style.display = (theme === 'system') ? 'block' : 'none';
+            document.getElementById('check-light').style.display = (theme === 'light') ? 'block' : 'none';
+            document.getElementById('check-dark').style.display = (theme === 'dark') ? 'block' : 'none';
+
+            document.getElementById('themeDropdown').classList.remove('show');
+        }
+
         // ⚙️ 开发者密码校验与图标管理逻辑
-        function openAdminSettings() {
+        function openAdminSettings(event) {
+            event.stopPropagation();
             const pwd = prompt("🔐 请输入开发者管理密码：");
-            if (pwd === "admin") { // 默认密码为 admin，可在此处自行修改
+            if (pwd === "admin") {
                 document.getElementById('adminLogoModal').style.display = 'flex';
             } else if (pwd !== null) {
                 alert("❌ 密码错误，拒绝访问！");
@@ -311,17 +368,6 @@
             }
         }
 
-        function changeTheme(theme) {
-            const root = document.documentElement;
-            if (theme === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-            } else {
-                root.setAttribute('data-theme', theme);
-            }
-            localStorage.setItem('user-theme', theme);
-        }
-
         function toggleMenu(event, itemId) {
             event.stopPropagation();
             currentActiveItemId = itemId;
@@ -336,10 +382,12 @@
             menu.style.top = rect.top + 'px';
             menu.style.left = (rect.right + 6) + 'px';
             menu.classList.toggle('show');
+            document.getElementById('themeDropdown').classList.remove('show');
         }
 
         window.addEventListener('click', () => {
             document.getElementById('globalMenu').classList.remove('show');
+            document.getElementById('themeDropdown').classList.remove('show');
         });
 
         function togglePin(itemId, event) {
