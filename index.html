@@ -71,7 +71,6 @@
         .action-btn:hover { background: var(--border-color); color: var(--text-main); }
         .action-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* 🌟 全局固定定位悬浮菜单（加入 stopPropagation 防止误关闭） */
         .action-menu { position: fixed; width: 160px; background-color: var(--menu-bg); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 99999; display: none; padding: 6px; }
         .action-menu.show { display: block; }
         .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13px; color: var(--text-main); border-radius: 6px; cursor: pointer; transition: 0.15s; }
@@ -157,7 +156,7 @@
         </div>
     </div>
 
-    <!-- 🌟 全局唯一悬浮菜单（加入 onclick="event.stopPropagation()" 防止点击穿透关闭） -->
+    <!-- 全局唯一悬浮菜单 -->
     <div class="action-menu" id="globalMenu" onclick="event.stopPropagation()">
         <div class="menu-item" onclick="handleMenuAction('分享')"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>分享</div>
         <div class="menu-item" onclick="handleMenuAction('重命名')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>重命名</div>
@@ -191,6 +190,40 @@
     <script>
         let currentActiveItemId = null;
 
+        // 🌟 检查 URL 中是否有分享参数，如果有则直接渲染分享专属对话页面
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const shareParam = params.get('share');
+            if (shareParam) {
+                try {
+                    const decodedData = JSON.parse(decodeURIComponent(atob(shareParam)));
+                    const rootOrigin = window.location.origin + window.location.pathname;
+                    document.body.innerHTML = `
+                        <div style="max-width: 800px; margin: 0 auto; padding: 25px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #212121; color: #ececec; min-height: 100vh; display: flex; flex-direction: column;">
+                            <div style="text-align: center; padding: 15px; border-bottom: 1px solid #2f2f2f; margin-bottom: 25px;">
+                                <h2 style="margin: 0; font-size: 18px; color: #fff;">🏥 医疗智能辅助系统 - 共享问诊记录</h2>
+                                <p style="margin: 6px 0 0 0; font-size: 13px; color: #8e8e8e;">会话主题：${decodedData.title || '专业医疗咨询'}</p>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-bottom: 25px;">
+                                ${decodedData.html}
+                            </div>
+                            <div style="padding: 22px; text-align: center; border-top: 1px solid #2f2f2f; margin-top: 30px; background: #171717; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                                <p style="margin: 0 0 10px 0; font-size: 14px; color: #ececec;">本问诊对话由 <b>医疗智能辅助系统</b> AI 驱动生成</p>
+                                <a href="${rootOrigin}" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: bold; font-size: 15px;">👉 点击这里，立即体验您的专属智能医疗助手与在线问诊服务</a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                } catch (e) {
+                    console.error('解析分享链接失败', e);
+                }
+            }
+
+            const savedTheme = localStorage.getItem('user-theme') || 'dark';
+            document.getElementById('themeSelect').value = savedTheme;
+            changeTheme(savedTheme);
+        });
+
         function changeTheme(theme) {
             const root = document.documentElement;
             if (theme === 'system') {
@@ -202,11 +235,6 @@
             localStorage.setItem('user-theme', theme);
         }
 
-        const savedTheme = localStorage.getItem('user-theme') || 'dark';
-        document.getElementById('themeSelect').value = savedTheme;
-        changeTheme(savedTheme);
-
-        // 切换悬浮菜单显示状态
         function toggleMenu(event, itemId) {
             event.stopPropagation();
             currentActiveItemId = itemId;
@@ -223,12 +251,10 @@
             menu.classList.toggle('show');
         }
 
-        // 点击页面空白处关闭菜单
         window.addEventListener('click', () => {
             document.getElementById('globalMenu').classList.remove('show');
         });
 
-        // 置顶 / 取消置顶切换核心逻辑
         function togglePin(itemId, event) {
             if (event) event.stopPropagation();
             document.getElementById('globalMenu').classList.remove('show');
@@ -248,7 +274,7 @@
             }
         }
 
-        // 下拉菜单项点击分发
+        // 🌟 核心分享逻辑：提取当前对话内容生成专属链接并复制以便转发微信
         function handleMenuAction(actionName) {
             const menu = document.getElementById('globalMenu');
             menu.classList.remove('show');
@@ -269,7 +295,17 @@
                     textElement.innerText = newName;
                 }
             } else if (actionName === '分享') {
-                navigator.clipboard.writeText(window.location.href);
+                const chatHtml = document.getElementById('chat-history').innerHTML;
+                const sessionTitle = textElement ? textElement.innerText : '医疗咨询问诊记录';
+                const payload = { title: sessionTitle, html: chatHtml };
+                const encodedShare = btoa(encodeURIComponent(JSON.stringify(payload)));
+                const shareUrl = window.location.origin + window.location.pathname + '?share=' + encodedShare;
+
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('✅ 问诊分享链接已成功复制！\n您可以直接粘贴并转发至微信。对方打开即可查看专属对话及底部推广链接。');
+                }).catch(() => {
+                    prompt('请复制以下分享链接：', shareUrl);
+                });
             } else if (actionName === '归档') {
                 itemElement.style.opacity = '0.4';
             } else if (actionName === '置顶切换') {
@@ -277,7 +313,6 @@
             }
         }
 
-        // 开启新对话
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
             chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
