@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>医疗智能辅助系统</title>
+    <!-- PWA 独立窗口配置支持 -->
+    <meta name="application-name" content="医疗智能辅助系统">
     <style>
         :root[data-theme="dark"] {
             --bg-sidebar: #171717;
@@ -54,7 +56,7 @@
         
         /* 聊天滚动区 */
         #chat-history { flex: 1; padding: 20px 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; max-width: 900px; width: 100%; margin: 0 auto; }
-        .msg { line-height: 1.6; font-size: 15px; max-width: 85%; word-break: break-all; }
+        .msg { line-height: 1.6; font-size: 15px; max-width: 85%; word-break: break-all; white-space: pre-wrap; }
         .user-msg { background-color: var(--user-msg-bg); padding: 10px 16px; border-radius: 12px; align-self: flex-end; }
         .ai-msg { background-color: transparent; color: var(--text-main); align-self: flex-start; }
 
@@ -73,7 +75,7 @@
 </head>
 <body>
 
-    <!-- 左侧边栏：精简实用功能 -->
+    <!-- 左侧边栏 -->
     <div class="sidebar">
         <div class="sidebar-top">
             <span>🏥 医疗辅助工作台</span>
@@ -107,9 +109,10 @@
             <span style="font-size: 12px;">Secure Backend Active</span>
         </div>
         
-        <!-- 聊天记录区 -->
+        <!-- 聊天记录区（已写入精确的医疗免责声明） -->
         <div id="chat-history">
-            <div class="msg ai-msg">您好！我是医疗智能底座助理。请告诉我您的症状或咨询需求，我将为您提供专业的辅助分析。</div>
+            <div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
+⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>
         </div>
         
         <!-- 底部输入框 -->
@@ -143,7 +146,8 @@
         // 开启新对话
         function startNewChat() {
             const chatHistory = document.getElementById('chat-history');
-            chatHistory.innerHTML = `<div class="msg ai-msg">新对话已开启。请描述您的症状或医疗咨询需求。</div>`;
+            chatHistory.innerHTML = `<div class="msg ai-msg">您好！我是医疗智能底座助理。请尽可能详细地描述患者的年龄、性别、既往病史以及当前的核心症状（如发病时长、具体感受等）。
+⚠️ 【安全提示】：本系统为 AI 辅助分析工具，输出的结论仅供临床辅助参考，不能替代执业医师的面诊。如遇突发剧烈胸痛、呼吸困难、大出血等危急重症，请立即呼叫 120 急救！</div>`;
         }
 
         // 点击历史记录模拟切换
